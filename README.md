@@ -14,6 +14,9 @@ This is a real-time chat application built using the MERN stack (MongoDB, Expres
 
 - Node.js (v14 or above)
 - MongoDB (v4 or above)
+- MUI (latest available)
+- Express.js (latest available)
+- Socket (latest available)
 
 ## Getting Started
 
