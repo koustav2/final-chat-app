@@ -11,6 +11,7 @@ const cookieParser = require('cookie-parser');
 const app = express();
 const server = http.createServer(app);
 const io = socketIO(server);
+module.exports.io=io;
 connectDB();
 app.use(cors());
 app.use(express.json());
