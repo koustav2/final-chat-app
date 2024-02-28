@@ -1,22 +1,64 @@
 /* eslint-disable react/no-unescaped-entities */
 /* eslint-disable no-unused-vars */
-import React, { useState } from 'react';
+import React, { createRef, useState } from "react";
 import { Link, redirect } from "react-router-dom";
 import axios from 'axios';
 import { Container, Paper, Typography, FormControl, FormLabel, TextField, Button } from '@mui/material'
 import '../css/loder.css'
+import AvatarUpload from '../components/AvatarUpload';
+import {toast} from "react-hot-toast"
 const Register = () => {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [isPending, startTransition] = React.useTransition();
+  const [image, _setImage] = useState('');
+  const inputFileRef = createRef(null);
 
+  const cleanup = () => {
+    URL.revokeObjectURL(image);
+    inputFileRef.current.value = null;
+  };
+
+  const setImage = (newImage) => {
+    if (image) {
+      cleanup();
+    }
+    _setImage(newImage);
+  };
+  const handleOnChange = async (event) => {
+    const file = event.target?.files?.[0];
+
+    if (file) {
+      let formData = new FormData();
+      formData.append('file', file);
+      formData.append('upload_preset', `${import.meta.env.VITE_CLOUDINARY_PRESET}`);
+      try {
+        const response = await axios.post(
+          `https://api.cloudinary.com/v1_1/${import.meta.env.VITE_CLOUDINARY_CLOUD_NAME}/image/upload`,
+          formData
+        );
+        console.log(response.data);
+        _setImage(response.data.secure_url);
+      } catch (error) {
+        toast.error(error);
+      }
+    }
+  };
+
+
+  const handleClick = (event) => {
+    if (image) {
+      event.preventDefault();
+      setImage(null);
+    }
+  };
   const handleSubmit = (e) => {
     e.preventDefault();
     try {
       setLoading(true);
-      const response = axios.post(`${import.meta.env.VITE_SERVER_URL}/register`, { username, email, password });
+      const response = axios.post(`${import.meta.env.VITE_SERVER_URL}/register`, { username, email, password, "imageUrl": image });
       if (response.status === 200) {
         setLoading(false);
         redirect('/login');
@@ -49,6 +91,7 @@ const Register = () => {
           borderRadius: '10px',
         }}
       >
+
         <Typography variant="h5" style={{
           textAlign: 'center',
           fontWeight: 'bold',
@@ -108,6 +151,15 @@ const Register = () => {
               type="password"
               variant="outlined"
               onChange={(e) => setPassword(e.target.value)}
+            />
+            <AvatarUpload
+              image={image}
+              setImage={_setImage}
+              inputFileRef={inputFileRef}
+              handleClick={handleClick}
+              handleOnChange={handleOnChange}
+
+              cleanup={cleanup}
             />
             <Button
               style={{
