@@ -12,7 +12,7 @@ router.route('/login').post(login);
 // router.route("/update-account").patch(verifyToken, updateAccountDetails);
 // router.route("/update-avatar").post(verifyToken, upload.single("avatar"), updateUserAvatar);
 // router.route("/c/:username").get(verifyToken, getUserChannelProfile)
-// router.route('/refresh-token').post(refreshAccessToken);
+router.route('/refresh-token').post(refreshAccessToken);
 router.route('/logout').post(verifyToken, logout);
 
 module.exports = router;
