@@ -12,6 +12,7 @@ const app = express();
 const server = http.createServer(app);
 const io = socketIO(server);
 module.exports.io=io;
+
 connectDB();
 app.use(cors());
 app.use(express.json());
@@ -20,6 +21,8 @@ app.use(express.static("public"))
 app.use(cookieParser());
 
 // Add your socket.io logic here
+
+app.use('./api/v1',require('../routes/user.routes'));
 
 const PORT = process.env.PORT || 3000;
 server.listen(PORT, () => {

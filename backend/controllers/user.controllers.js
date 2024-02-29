@@ -1,9 +1,8 @@
-
-import { User } from "../models/user.model.js";
-import { ApiError } from "../utils/ApiError.js";
-import { ApiResponse } from "../utils/ApiResponse.js";
-import { asyncHandler } from "../utils/asyncHandler.js";
-import { deleteCloudinaryImage, uploadImageToCloudinary } from "../utils/cloudinary/cloudinary.js";
+const User = require("../models/user.model.js");
+const ApiError = require("../utils/apiError.js");
+const ApiResponse = require("../utils/ApiResponse.js");
+const asyncHandler = require("../utils/asyncHandler.js");
+const { deleteCloudinaryImage, uploadImageToCloudinary } = require("../utils/cloudinary/cloudinary.js");
 
 export const generateAccessAndRefreshtokens = async (userId) => {
     try {
