@@ -2,9 +2,9 @@ const User = require("../models/user.model.js");
 const ApiError = require("../utils/apiError.js");
 const ApiResponse = require("../utils/ApiResponse.js");
 const asyncHandler = require("../utils/asyncHandler.js");
-const { deleteCloudinaryImage, uploadImageToCloudinary } = require("../utils/cloudinary/cloudinary.js");
+const { deleteCloudinaryImage, uploadImageToCloudinary } = require("../utils/cloudinary");
 
-export const generateAccessAndRefreshtokens = async (userId) => {
+exports.generateAccessAndRefreshtokens = async (userId) => {
     try {
         const user = await User.findById(userId)
         const accessToken = await user.generateToken()
@@ -19,8 +19,8 @@ export const generateAccessAndRefreshtokens = async (userId) => {
     }
 }
 
-export const register = asyncHandler(async (req, res, next) => {
-    const {  email, username, password } = req.body
+exports.register = asyncHandler(async (req, res, next) => {
+    const { username, email, password } = req.body
     if (
         [email, username, password].some((field) => field?.trim() === "")
     ) {
@@ -60,13 +60,13 @@ export const register = asyncHandler(async (req, res, next) => {
     }
 
 
-    res.status(201).json(
+    res.status(200).json(
         new ApiResponse(200, createdUser, "User registered Successfully")
     )
 
 });
 
-export const login = asyncHandler(async (req, res, next) => {
+exports.login = asyncHandler(async (req, res, next) => {
 
     const { email, username, password } = req.body
     console.log(email);
@@ -111,7 +111,7 @@ export const login = asyncHandler(async (req, res, next) => {
         )
 });
 
-export const logout = asyncHandler(async (req, res, next) => {
+exports.logout = asyncHandler(async (req, res, next) => {
     try {
         await User.findByIdAndUpdate(req.user._id, {
             $set: {
@@ -137,3 +137,5 @@ export const logout = asyncHandler(async (req, res, next) => {
         throw new ApiError(500, "Logout failed", err)
     }
 });
+
+// module.exports = { register, login, logout }

@@ -1,3 +1,6 @@
+/* eslint-disable react-refresh/only-export-components */
+import AppLayout from "../components/layout/AppLayout";
+
 const Dashboard = () => {
   return (
     <div>
@@ -7,4 +10,4 @@ const Dashboard = () => {
   );
 };
 
-export default Dashboard;
+export default AppLayout()(Dashboard);

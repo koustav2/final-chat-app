@@ -11,7 +11,7 @@ cloudinary.config({
     api_secret: process.env.CLOUDINARY_API_SECRET
 });
 
-export const uploadImageToCloudinary = async (localFilePath ) => {
+const uploadImageToCloudinary = async (localFilePath ) => {
     try {
         if (!localFilePath) throw new Error('No file path specified.');
         const response = await cloudinary.uploader.upload(localFilePath,{resource_type: 'image'});
@@ -28,7 +28,7 @@ export const uploadImageToCloudinary = async (localFilePath ) => {
     }
 };
 
-export const uploadVideoToCloudinary = async (localFilePath ) => {
+const uploadVideoToCloudinary = async (localFilePath ) => {
     try {
         if (!localFilePath) throw new Error('No file path specified.');
         const response = await cloudinary.uploader.upload(localFilePath,{resource_type:'video'});
@@ -46,7 +46,7 @@ export const uploadVideoToCloudinary = async (localFilePath ) => {
 };
 
 
-export const deleteCloudinaryImage = async (imageUrl) => {
+const deleteCloudinaryImage = async (imageUrl) => {
     try {
         if (!imageUrl) return null;
         const splittedUrl = imageUrl.split("/");
@@ -56,4 +56,11 @@ export const deleteCloudinaryImage = async (imageUrl) => {
     } catch (error) {
         return null;
     }
+}
+
+
+module.exports = {
+    uploadImageToCloudinary,
+    uploadVideoToCloudinary,
+    deleteCloudinaryImage
 }

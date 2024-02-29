@@ -6,13 +6,17 @@ import axios from 'axios';
 import { Container, Paper, Typography, FormControl, FormLabel, TextField, Button } from '@mui/material'
 import '../css/loder.css'
 import AvatarUpload from '../components/AvatarUpload';
-import {toast} from "react-hot-toast"
+import { toast } from "react-hot-toast"
+import { useInputValidation } from '6pp'
+import { userNameValidator } from "../utils/validators";
+
+
 const Register = () => {
-  const [username, setUsername] = useState('');
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('');
+  const username = useInputValidation("", userNameValidator);
+  const password = useInputValidation("");
+  const email = useInputValidation("");
+
   const [loading, setLoading] = useState(false);
-  const [isPending, startTransition] = React.useTransition();
   const [image, _setImage] = useState('');
   const inputFileRef = createRef(null);
 
@@ -20,7 +24,6 @@ const Register = () => {
     URL.revokeObjectURL(image);
     inputFileRef.current.value = null;
   };
-
   const setImage = (newImage) => {
     if (image) {
       cleanup();
@@ -46,23 +49,23 @@ const Register = () => {
       }
     }
   };
-
-
   const handleClick = (event) => {
     if (image) {
       event.preventDefault();
       setImage(null);
     }
   };
+
   const handleSubmit = (e) => {
     e.preventDefault();
     try {
       setLoading(true);
       const response = axios.post(`${import.meta.env.VITE_SERVER_URL}/register`, { username, email, password, "imageUrl": image });
-      if (response.status === 200) {
-        setLoading(false);
-        redirect('/login');
-      }
+      console.log(response)
+      // if (response.status === 200) {
+      //   setLoading(false);
+      //   redirect('/login');
+      // }
     }
     catch (error) {
       console.error(error);
@@ -78,8 +81,7 @@ const Register = () => {
         alignItems: 'center',
         justifyContent: 'center',
         objectFit: 'contained',
-        backgroundColor: 'rgba(4, 6, 39, 0.341)',
-        backgroundImage: `url('https://imgs.search.brave.com/SJwJZCIUHyqCwGpCGynF4m9Tm97c15f-BfPzq4ZaKa8/rs:fit:860:0:0/g:ce/aHR0cHM6Ly9wbHVz/LnVuc3BsYXNoLmNv/bS9wcmVtaXVtX3Bo/b3RvLTE2NzUwOTg2/NTQ3MjgtYWQxMTNk/N2RiMjZlP3E9ODAm/dz0xMDAwJmF1dG89/Zm9ybWF0JmZpdD1j/cm9wJml4bGliPXJi/LTQuMC4zJml4aWQ9/TTN3eE1qQTNmREI4/TUh4elpXRnlZMmg4/TVh4OGJtbG5hSFFs/TWpCemEzbDhaVzU4/TUh4OE1IeDhmREE9')`,
+        // backgroundImage: `url('https://imgs.search.brave.com/SJwJZCIUHyqCwGpCGynF4m9Tm97c15f-BfPzq4ZaKa8/rs:fit:860:0:0/g:ce/aHR0cHM6Ly9wbHVz/LnVuc3BsYXNoLmNv/bS9wcmVtaXVtX3Bo/b3RvLTE2NzUwOTg2/NTQ3MjgtYWQxMTNk/N2RiMjZlP3E9ODAm/dz0xMDAwJmF1dG89/Zm9ybWF0JmZpdD1j/cm9wJml4bGliPXJi/LTQuMC4zJml4aWQ9/TTN3eE1qQTNmREI4/TUh4elpXRnlZMmg4/TVh4OGJtbG5hSFFs/TWpCemEzbDhaVzU4/TUh4OE1IeDhmREE9')`,
       }}
     >
       <Paper
@@ -109,7 +111,9 @@ const Register = () => {
             marginTop: "20px",
           }}
         >
-          <FormControl fullWidth>
+          <FormControl fullWidth
+            onSubmit={handleSubmit}
+          >
             <FormLabel component="legend"
               style={{
                 fontWeight: 'bold',
@@ -121,9 +125,21 @@ const Register = () => {
               required
               id="username"
               label="Username"
+              type="text"
+              value={username.value}
               variant="outlined"
-              onChange={(e) => setUsername(e.target.value)}
+              onChange={username.changeHandler}
             />
+            {
+              username.error &&
+              <Typography variant="subtitle1" sx={{
+                color: "#410c0c",
+                textAlign: "left",
+                fontWeight: "bold",
+              }}>
+                {username.error}
+              </Typography>
+            }
             <FormLabel component="legend"
               style={{
                 fontWeight: 'bold',
@@ -137,8 +153,19 @@ const Register = () => {
               label="email"
               type="email"
               variant="outlined"
-              onChange={(e) => setEmail(e.target.value)}
+              value={email.value}
+              onChange={email.changeHandler}
             />
+            {
+              email.error &&
+              <Typography variant="subtitle1" sx={{
+                color: "#410c0c",
+                textAlign: "left",
+                fontWeight: "bold",
+              }}>
+                {email.error}
+              </Typography>
+            }
             <FormLabel component="legend"
               style={{
                 fontWeight: 'bold',
@@ -152,8 +179,19 @@ const Register = () => {
               label="Password"
               type="password"
               variant="outlined"
-              onChange={(e) => setPassword(e.target.value)}
+              value={password.value}
+              onChange={password.changeHandler}
             />
+            {
+              password.error &&
+              <Typography variant="subtitle1" sx={{
+                color: "#410c0c",
+                textAlign: "left",
+                fontWeight: "bold",
+              }}>
+                {password.error}
+              </Typography>
+            }
             <AvatarUpload
               image={image}
               setImage={_setImage}
@@ -173,7 +211,6 @@ const Register = () => {
               variant="contained"
               color="primary"
               sx={{ mt: 3, mb: 2 }}
-              onClick={handleSubmit}
               disabled={loading}
 
             >

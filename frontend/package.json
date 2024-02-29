@@ -16,6 +16,7 @@
     "@mui/material": "5.15.11",
     "@prisma/client": "5.10.2",
     "@reduxjs/toolkit": "2.2.1",
+    "6pp": "1.1.15",
     "axios": "1.6.7",
     "bcrypt": "5.1.1",
     "chart.js": "4.4.1",

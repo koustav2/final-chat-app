@@ -22,7 +22,9 @@ app.use(cookieParser());
 
 // Add your socket.io logic here
 
-app.use('./api/v1',require('../routes/user.routes'));
+const userRouter = require('../routes/user.routes')
+
+app.use('./api/v1',userRouter);
 
 const PORT = process.env.PORT || 3000;
 server.listen(PORT, () => {

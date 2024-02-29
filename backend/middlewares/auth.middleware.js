@@ -1,5 +1,5 @@
 const jwt = require("jsonwebtoken");
-const { asyncHandler } = require("../utils/asyncHandler");
+const asyncHandler = require("../utils/asyncHandler");
 // const { ApiError } = require("../utils/apiError");
 
 const { TokenExpiredError } = jwt;
@@ -11,7 +11,7 @@ const catchError = (err, res) => {
     return res.sendStatus(401).send({ message: "Unauthorized!" });
 }
 
-module.exports.verifyToken = asyncHandler(async (req, _, next) => {
+exports.verifyToken = asyncHandler(async (req, _, next) => {
     try {
         const token = req.cookies?.accessToken || req.header("Authorization")?.replace("Bearer ", "")
         if (!token) {
