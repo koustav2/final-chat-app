@@ -2,27 +2,12 @@ const User = require("../models/user.model.js");
 const ApiError = require("../utils/apiError.js");
 const ApiResponse = require("../utils/ApiResponse.js");
 const asyncHandler = require("../utils/asyncHandler.js");
-const { deleteCloudinaryImage, uploadImageToCloudinary } = require("../utils/cloudinary");
-
-exports.generateAccessAndRefreshtokens = async (userId) => {
-    try {
-        const user = await User.findById(userId)
-        const accessToken = await user.generateToken()
-        const refreshToken = await user.generateRefreshToken()
-        user.refreshToken = refreshToken
-        await user.save({
-            validateBeforeSave: false
-        })
-        return { accessToken, refreshToken }
-    } catch (err) {
-        throw new ApiError(500, "Token generation failed")
-    }
-}
+const { generateAccessAndRefreshtokens } = require("../utils/token.js");
 
 exports.register = asyncHandler(async (req, res, next) => {
-    const { username, email, password } = req.body
+    const { username, email, password, imageUrl } = req.body
     if (
-        [email, username, password].some((field) => field?.trim() === "")
+        [email, username, password, imageUrl].some((field) => field?.trim() === "")
     ) {
         throw new ApiError(400, "All fields are required")
     }
@@ -34,21 +19,13 @@ exports.register = asyncHandler(async (req, res, next) => {
         $or: [{ username }, { email }]
     })
 
-    if (existedUser) {
+    if (existedUser!==null) {
         throw new ApiError(409, "User with email or username already exists")
     }
-    const avatarLocalPath = req.files?.avatar[0]?.path;
-    if (!avatarLocalPath) {
-        throw new ApiError(400, "Avatar file is required")
-    }
-    const avatar = await uploadImageToCloudinary(avatarLocalPath)
-    if (!avatar) {
-        throw new ApiError(500, "Avatar upload failed")
-    }
+
 
     const user = await User.create({
-        fullName,
-        avatar: avatar.url,
+        avatar: imageUrl,
         email: email.toLowerCase(),
         password,
         username: username.toLowerCase()
@@ -61,7 +38,7 @@ exports.register = asyncHandler(async (req, res, next) => {
 
 
     res.status(200).json(
-        new ApiResponse(200, createdUser, "User registered Successfully")
+        new ApiResponse(200, "User registered Successfully")
     )
 
 });
@@ -69,8 +46,6 @@ exports.register = asyncHandler(async (req, res, next) => {
 exports.login = asyncHandler(async (req, res, next) => {
 
     const { email, username, password } = req.body
-    console.log(email);
-
     if (!(username || email)) {
         throw new ApiError(400, "Either username or email is required");
     }
@@ -91,13 +66,16 @@ exports.login = asyncHandler(async (req, res, next) => {
     if (!matchPassword) {
         throw new ApiError(401, "password is incorrect");
     }
-    const { accessToken, refreshToken } = await generateAccessAndRefreshtokens(user._id)
+    const { accessToken, refreshToken } = await  generateAccessAndRefreshtokens(user._id)
 
 
     const loggedInUser = await User.findById(user._id).select("-password -refreshToken")
 
     return res
         .status(200)
+        .cookie("user_details", JSON.stringify(loggedInUser), {
+            secure: true,
+        })
         .cookie("refreshToken", refreshToken, {
             httpOnly: true,
             secure: true,
@@ -123,13 +101,12 @@ exports.logout = asyncHandler(async (req, res, next) => {
             }
         )
         const option = {
-            httpOnly: true,
-            secure: true,
             expires: new Date(Date.now()),
         }
         req.user = null
         res.clearCookie("accessToken", option)
         res.clearCookie("refreshToken", option)
+        res.clearCookie("user_details", option)
         res.status(200).json(
             new ApiResponse(200, {}, "User logged out successfully")
         )
@@ -137,5 +114,3 @@ exports.logout = asyncHandler(async (req, res, next) => {
         throw new ApiError(500, "Logout failed", err)
     }
 });
-
-// module.exports = { register, login, logout }

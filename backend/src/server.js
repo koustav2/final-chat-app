@@ -11,10 +11,14 @@ const cookieParser = require('cookie-parser');
 const app = express();
 const server = http.createServer(app);
 const io = socketIO(server);
-module.exports.io=io;
+module.exports.io = io;
 
 connectDB();
-app.use(cors());
+var corsOptions = {
+  origin: 'http://localhost:5173',
+  credentials: true
+}
+app.use(cors(corsOptions));
 app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static("public"))
@@ -24,7 +28,7 @@ app.use(cookieParser());
 
 const userRouter = require('../routes/user.routes')
 
-app.use('./api/v1',userRouter);
+app.use('/api/v1', userRouter);
 
 const PORT = process.env.PORT || 3000;
 server.listen(PORT, () => {

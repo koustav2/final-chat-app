@@ -11,7 +11,7 @@ const catchError = (err, res) => {
     return res.sendStatus(401).send({ message: "Unauthorized!" });
 }
 
-exports.verifyToken = asyncHandler(async (req, _, next) => {
+exports.verifyToken = asyncHandler(async (req, res, next) => {
     try {
         const token = req.cookies?.accessToken || req.header("Authorization")?.replace("Bearer ", "")
         if (!token) {

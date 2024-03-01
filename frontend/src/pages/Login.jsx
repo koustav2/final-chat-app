@@ -2,35 +2,50 @@
 /* eslint-disable no-unused-vars */
 
 import React, { useState } from 'react';
-import { Link, redirect } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import axios from 'axios';
 import { Container, Paper, Typography, FormControl, FormLabel, TextField, Button } from '@mui/material'
 import '../css/loder.css'
 import { useInputValidation } from '6pp'
 import { userNameValidator } from '../utils/validators';
+import { toast } from 'react-hot-toast'
+import { useAuth } from '../hooks/AuthProvider';
 
 
 const Login = () => {
-
+  const { setIsAuthenticated } = useAuth();
+  const navigate = useNavigate();
   const username = useInputValidation("", userNameValidator);
   const password = useInputValidation("");
 
   const [loading, setLoading] = useState(false);
   const [isPending, startTransition] = React.useTransition();
-  const handleLogin = async () => {
+
+  const handleLogin = async (e) => {
+    e.preventDefault();
     try {
       setLoading(true);
-      const response = axios.post(`${import.meta.env.VITE_SERVER_URL}/login`, { username, password });
-      if (response.status === 200) {
+      const response = await axios.post(`${import.meta.env.VITE_SERVER_URL}/api/v1/login`, {
+        username: username.value,
+        password: password.value,
+      }, {
+        withCredentials: true,
+      });
+      if (response.data.statusCode == 200) {
+        toast.success(response.data.message);
         setLoading(false);
-        redirect('/dashboard');
+        setIsAuthenticated(true);
+        navigate('/dashboard'); // Navigate to dashboard after successful login
+      } else {
+        setLoading(false);
+        toast.error(response.data.message);
       }
     } catch (error) {
-      console.error(error);
+      console.log(error);
       setLoading(false);
-
     }
   };
+
 
   return (
     <Container component={"main"}
@@ -69,7 +84,6 @@ const Login = () => {
           }}
         >
           <FormControl fullWidth
-            onSubmit={handleLogin}
           >
             <FormLabel component="legend"
               style={{
@@ -132,6 +146,7 @@ const Login = () => {
               color="primary"
               sx={{ mt: 3, mb: 2 }}
               disabled={loading || isPending}
+              onClick={handleLogin}
 
             >
               {loading ? <span className="loader"></span> : 'Sign In'}

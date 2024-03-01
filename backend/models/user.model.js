@@ -56,30 +56,48 @@ userSchema.methods.comparePassword = async function (password) {
 }
 
 userSchema.methods.generateToken = function () {
-    return jwt.sign({
-        _id: this._id,
-        username: this.username,
-        email: this.email,
-    },
-        process.env.JWT_SECRET,
+    console.log('Generating token for user', this._id); // Add logging
+    try {
+        const token = jwt.sign({
+            _id: this._id,
+            username: this.username,
+            email: this.email,
+        },
+            process.env.JWT_SECRET,
 
-        {
-            expiresIn: process.env.ACCESS_TOKEN_EXPIRY
-        })
+            {
+                expiresIn: process.env.ACCESS_TOKEN_EXPIRY
+            });
+
+        console.log('Generated access token: ', token); // Add logging
+        return token;
+    } catch (error) {
+        console.error('Failed to generate token: ', error); // Add error logging
+        throw error;
+    }
 }
 
 userSchema.methods.generateRefreshToken = function () {
-    return jwt.sign({
-        _id: this._id,
-    },
-        process.env.JWT_REFRESH_SECRET,
+    console.log('Generating refresh token for user', this._id); // Add logging
+    try {
+        const refreshToken = jwt.sign({
+            _id: this._id,
+        },
+            process.env.JWT_REFRESH_SECRET,
 
-        {
-            expiresIn: process.env.REFRESH_TOKEN_EXPIRY
-        })
+            {
+                expiresIn: process.env.REFRESH_TOKEN_EXPIRY
+            });
+
+        console.log('Generated refresh token: ', refreshToken); // Add logging
+        return refreshToken;
+    } catch (error) {
+        console.error('Failed to generate refresh token: ', error); // Add error logging
+        throw error;
+    }
 }
 
 
- const User = mongoose.model("User", userSchema)
+const User = mongoose.model("User", userSchema)
 
- module.exports=User
+module.exports = User

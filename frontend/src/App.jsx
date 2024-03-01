@@ -1,9 +1,11 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable no-unused-vars */
+import { useEffect, useState, lazy } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
-// import AuthLayout from './pages/AuthLayout'
-import { lazy } from 'react'
 import ProtectedRoute, { } from './components/auth/ProtectedRoutes'
+import { useCookies } from 'react-cookie';
+import Cookies from 'js-cookie'
+import { AuthProvider, useAuth } from './hooks/AuthProvider';
 
 const Home = lazy(() => import('./pages/Home'))
 const Login = lazy(() => import('./pages/Login'))
@@ -12,16 +14,10 @@ const Dashboard = lazy(() => import('./pages/DashBoard'))
 const Chat = lazy(() => import('./pages/Chat'))
 const Group = lazy(() => import('./pages/Group'))
 
-function App({ user }) {
-  let isAuthenticated
-  if (!user) {
-    isAuthenticated = true
-  }
-  else {
-    isAuthenticated = false
-  }
 
-
+function App() {
+  const { isAuthenticated } = useAuth();
+  console.log(isAuthenticated)
   return (
     <Router>
       <Routes>

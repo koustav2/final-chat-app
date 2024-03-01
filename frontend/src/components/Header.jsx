@@ -3,8 +3,13 @@ import React from 'react'
 import { Box, AppBar, Toolbar, Typography, IconButton, Dialog, DialogTitle, DialogContent, DialogActions, Button } from '@mui/material'
 import { orange } from '../constants/color'
 import { Add as AddIcon, Logout, Menu as MenuIcon, Search as SearchIcon } from "@mui/icons-material"
-
+import axios from 'axios'
+import { toast } from 'react-hot-toast'
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from '../hooks/AuthProvider'
 const Header = () => {
+  const navigate = useNavigate();
+  const { setIsAuthenticated } = useAuth();
   const [open, setOpen] = React.useState(false);
   const handleMobile = (e) => {
     console.log("mobile")
@@ -16,6 +21,20 @@ const Header = () => {
   const handleClose = () => {
     setOpen(false);
   };
+  const logout = async  (e) => {
+    e.preventDefault();
+    const response = await axios.post(`${import.meta.env.VITE_SERVER_URL}/api/v1/logout`, {}, { withCredentials: true })
+    // console.log(response)
+    if (response.data.statusCode == 200) {
+      toast.success(response.data.message)
+      navigate("/login")
+      setIsAuthenticated(false)
+    }
+    else {
+      toast.error(response.message)
+    }
+
+  }
   const openNewGroup = (e) => { }
   return (
     <>
@@ -52,7 +71,9 @@ const Header = () => {
                 <AddIcon />
               </IconButton>
 
-              <IconButton aria-label="" size="large" color="inherit" onClick={openNewGroup}>
+              <IconButton
+                onClick={logout}
+                aria-label="" size="large" color="inherit" >
                 <Logout />
               </IconButton>
             </Box>

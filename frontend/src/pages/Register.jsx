@@ -60,15 +60,17 @@ const Register = () => {
     e.preventDefault();
     try {
       setLoading(true);
-      const response = axios.post(`${import.meta.env.VITE_SERVER_URL}/register`, { username, email, password, "imageUrl": image });
-      console.log(response)
-      // if (response.status === 200) {
-      //   setLoading(false);
-      //   redirect('/login');
-      // }
+      const response = axios.post(`${import.meta.env.VITE_SERVER_URL}/api/v1/register`, { username:username.value, email:email.value, password:password.value, "imageUrl": image },{
+        withCredentials:true,
+    });
+      console.log(response.data)
+      if (response.status === 200) {
+        setLoading(false);
+        redirect('/login');
+      }
     }
     catch (error) {
-      console.error(error);
+      toast.error(error);
       setLoading(false);
     }
   };
@@ -112,7 +114,6 @@ const Register = () => {
           }}
         >
           <FormControl fullWidth
-            onSubmit={handleSubmit}
           >
             <FormLabel component="legend"
               style={{
@@ -212,6 +213,7 @@ const Register = () => {
               color="primary"
               sx={{ mt: 3, mb: 2 }}
               disabled={loading}
+              onClick={handleSubmit}
 
             >
               {loading ? <span className="loader"></span> : 'Sign Up'}
