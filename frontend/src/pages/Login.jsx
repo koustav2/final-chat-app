@@ -35,13 +35,14 @@ const Login = () => {
         toast.success(response.data.message);
         setLoading(false);
         setIsAuthenticated(true);
-        navigate('/dashboard'); // Navigate to dashboard after successful login
+        navigate('/dashboard'); 
       } else {
         setLoading(false);
-        toast.error(response.data.message);
+        console.log(response.response.data.message);
+        toast.error(response.response.data.message);
       }
     } catch (error) {
-      console.log(error);
+      toast.error("An error occurred. Please try again");
       setLoading(false);
     }
   };

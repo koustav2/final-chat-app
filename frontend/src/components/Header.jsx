@@ -24,7 +24,6 @@ const Header = () => {
   const logout = async  (e) => {
     e.preventDefault();
     const response = await axios.post(`${import.meta.env.VITE_SERVER_URL}/api/v1/logout`, {}, { withCredentials: true })
-    // console.log(response)
     if (response.data.statusCode == 200) {
       toast.success(response.data.message)
       navigate("/login")
