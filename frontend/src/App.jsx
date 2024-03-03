@@ -1,12 +1,13 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable no-unused-vars */
-import { useEffect, useState, lazy } from 'react';
+import { useEffect, useState, lazy, Suspense } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
-import ProtectedRoute, { } from './components/auth/ProtectedRoutes'
+import ProtectedRoute, { ErrorFallback } from './components/auth/ProtectedRoutes'
 import { useCookies } from 'react-cookie';
 import Cookies from 'js-cookie'
 import { AuthProvider, useAuth } from './hooks/AuthProvider';
-
+import { ErrorBoundary } from 'react-error-boundary'
+import CustomizedProgressBars from './components/shared/Loder';
 const Home = lazy(() => import('./pages/Home'))
 const Login = lazy(() => import('./pages/Login'))
 const Register = lazy(() => import('./pages/Register'))
@@ -34,9 +35,24 @@ function App() {
             </ProtectedRoute>
           } />
         {/* <Route path="/" element={<ProtectedRoute isAuthenticated={isAuthenticated}><Home /></ProtectedRoute>} /> */}
-        <Route path="dashboard" element={<ProtectedRoute isAuthenticated={isAuthenticated}><Dashboard /></ProtectedRoute>} />
+        <Route path="dashboard" element={
+          <Suspense fallback={<CustomizedProgressBars />}>
+            <ProtectedRoute isAuthenticated={isAuthenticated}><Dashboard /></ProtectedRoute>
+          </Suspense>
+        } />
         <Route path="chat/:chatId" element={<ProtectedRoute isAuthenticated={isAuthenticated}><Chat /></ProtectedRoute>} />
-        <Route path="groups" element={<ProtectedRoute isAuthenticated={isAuthenticated}><Group /></ProtectedRoute>} />
+        <Route path="groups" element={
+          // <ErrorBoundary
+          //   FallbackComponent={ErrorFallback}
+          //   onReset={() => { }} // reset the state of your component
+          // >
+          <Suspense fallback={<CustomizedProgressBars />}>
+            <ProtectedRoute isAuthenticated={isAuthenticated}>
+              <Group />
+            </ProtectedRoute>
+          </Suspense>
+          // </ErrorBoundary>
+        } />
         <Route path="*" element={<ProtectedRoute isAuthenticated={isAuthenticated}><Home /></ProtectedRoute>} />
       </Routes>
     </Router >

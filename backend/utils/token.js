@@ -1,4 +1,5 @@
-const User = require("../models/user.model")
+const User = require("../models/user.model");
+const { ApiError } = require("./apiError");
 
 module.exports.generateAccessAndRefreshtokens = async (userId) => {
     try {
@@ -8,11 +9,11 @@ module.exports.generateAccessAndRefreshtokens = async (userId) => {
         }
         const accessToken = await user.generateToken();
         if (!accessToken) {
-            console.log('Access token generation failed');
+            throw new ApiError(500, "Token generation failed");
         }
         const refreshToken = await user.generateRefreshToken();
         if (!refreshToken) {
-            console.log('Refresh token generation failed');
+           throw new ApiError(500, "Token generation failed");
         }
         user.refreshToken = refreshToken;
         await user.save({
