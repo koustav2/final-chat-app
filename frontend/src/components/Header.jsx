@@ -20,7 +20,6 @@ const Header = () => {
   const handleClickOpen = () => {
     setOpen(true);
   };
-
   const handleClose = () => {
     setOpen(false);
   };
@@ -37,7 +36,6 @@ const Header = () => {
   const navigateToGroup = (e) => {
     e.preventDefault();
     navigate('/groups');
-    window.location.reload();
   }
 
   const openSearchDialogue = (e) => {
@@ -46,14 +44,18 @@ const Header = () => {
 
   const logout = async (e) => {
     e.preventDefault();
-    const response = await axios.post(`${import.meta.env.VITE_SERVER_URL}/api/v1/logout`, {}, { withCredentials: true })
-    if (response.data.statusCode == 200) {
-      toast.success(response.data.message)
-      navigate("/login")
-      setIsAuthenticated(false)
-    }
-    else {
-      toast.error(response.message)
+    try {
+      const response = await axios.post(`${import.meta.env.VITE_SERVER_URL}/api/v1/logout`, {}, { withCredentials: true })
+      if (response.data.statusCode == 200) {
+        setIsAuthenticated(false);
+        toast.success(response.data.message);
+        navigate("/login");
+      }
+      else {
+        toast.error(response.message)
+      }
+    } catch (error) {
+      toast.error(`Logout failed: ${error.toString()}`);
     }
 
   }
@@ -69,6 +71,9 @@ const Header = () => {
         >
           <Toolbar>
             <Typography variant="h6"
+            style={{
+              cursor:"pointer"
+            }}
               sx={{
                 display: { xs: 'none', sm: 'block' },
               }}

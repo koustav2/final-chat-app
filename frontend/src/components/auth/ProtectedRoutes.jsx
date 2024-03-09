@@ -2,26 +2,30 @@
 /* eslint-disable react/prop-types */
 import { Route, Navigate, Outlet } from 'react-router-dom';
 
-
+import { Button, Card, CardContent, Typography } from "@mui/material";
 
 export function ErrorFallback({ error, resetErrorBoundary }) {
   return (
-    <div role="alert" 
-    style={{
-      padding: '100px',
-      margin: 'auto',
-      textAlign: 'center',
-    }}
-    >
-      <p>Something went wrong:</p>
-      <pre
+    <div
       style={{
-        margin: 0,
-        padding: 0,
-        overflow: 'auto',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        height: '100vh',
       }}
-      >{error.message}</pre>
-      <button onClick={resetErrorBoundary}>Try again</button>
+    >
+      <Card variant="outlined">
+        <CardContent>
+          <Typography color="textPrimary" gutterBottom>
+            Something went wrong:
+          </Typography>
+          <pre>{error.message}</pre>
+          <Button variant="contained" color="primary" onClick={resetErrorBoundary}>
+            Try again
+          </Button>
+        </CardContent>
+      </Card>
     </div>
   )
 }

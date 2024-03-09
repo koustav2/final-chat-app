@@ -1,12 +1,9 @@
 /* eslint-disable no-unused-vars */
 import * as React from 'react';
-import { styled } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import CircularProgress, {
   circularProgressClasses,
 } from '@mui/material/CircularProgress';
-import LinearProgress, { linearProgressClasses } from '@mui/material/LinearProgress';
-
 function FacebookCircularProgress(props) {
   return (
     <Box sx={{
@@ -25,7 +22,7 @@ function FacebookCircularProgress(props) {
             strokeLinecap: 'round',
           },
         }}
-        size={40}
+        size={60}
         thickness={4}
         {...props}
       />

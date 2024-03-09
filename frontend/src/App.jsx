@@ -18,15 +18,16 @@ const Group = lazy(() => import('./pages/Group'))
 
 function App() {
   const { isAuthenticated } = useAuth();
-  console.log(isAuthenticated)
   return (
     <Router>
       <Routes>
         <Route path="login"
           element={
-            <ProtectedRoute isAuthenticated={!isAuthenticated} redirectTo="/dashboard">
-              <Login />
-            </ProtectedRoute>
+            <Suspense fallback={<CustomizedProgressBars />}>
+              <ProtectedRoute isAuthenticated={!isAuthenticated} redirectTo="/dashboard">
+                <Login />
+              </ProtectedRoute>
+            </Suspense>
           } />
         <Route path="register"
           element={
@@ -34,24 +35,39 @@ function App() {
               <Register />
             </ProtectedRoute>
           } />
-        {/* <Route path="/" element={<ProtectedRoute isAuthenticated={isAuthenticated}><Home /></ProtectedRoute>} /> */}
+
+
         <Route path="dashboard" element={
-          <Suspense fallback={<CustomizedProgressBars />}>
-            <ProtectedRoute isAuthenticated={isAuthenticated}><Dashboard /></ProtectedRoute>
-          </Suspense>
+          <ErrorBoundary
+            FallbackComponent={ErrorFallback}
+            onReset={() => { }}
+          >
+            <Suspense fallback={<CustomizedProgressBars />}>
+              <ProtectedRoute isAuthenticated={isAuthenticated}><Dashboard /></ProtectedRoute>
+            </Suspense>
+          </ErrorBoundary>
         } />
-        <Route path="chat/:chatId" element={<ProtectedRoute isAuthenticated={isAuthenticated}><Chat /></ProtectedRoute>} />
+        <Route path="chat/:chatId" element={
+          <ErrorBoundary
+            FallbackComponent={ErrorFallback}
+            onReset={() => { }}
+          >
+            <Suspense fallback={<CustomizedProgressBars />}>
+              <ProtectedRoute isAuthenticated={isAuthenticated}><Chat /></ProtectedRoute>
+            </Suspense>
+          </ErrorBoundary>
+        } />
         <Route path="groups" element={
-          // <ErrorBoundary
-          //   FallbackComponent={ErrorFallback}
-          //   onReset={() => { }} // reset the state of your component
-          // >
-          <Suspense fallback={<CustomizedProgressBars />}>
-            <ProtectedRoute isAuthenticated={isAuthenticated}>
-              <Group />
-            </ProtectedRoute>
-          </Suspense>
-          // </ErrorBoundary>
+          <ErrorBoundary
+            FallbackComponent={ErrorFallback}
+            onReset={() => { }}
+          >
+            <Suspense fallback={<CustomizedProgressBars />}>
+              <ProtectedRoute isAuthenticated={isAuthenticated}>
+                <Group />
+              </ProtectedRoute>
+            </Suspense>
+          </ErrorBoundary>
         } />
         <Route path="*" element={<ProtectedRoute isAuthenticated={isAuthenticated}><Home /></ProtectedRoute>} />
       </Routes>

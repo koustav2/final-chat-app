@@ -3,19 +3,20 @@
 /* eslint-disable react/prop-types */
 // AuthContext.js
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import Cookies from 'js-cookie';
 
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(() => {
-    const isAuth = localStorage.getItem('isAuthenticated');
-    return isAuth === 'true';
+    const userDetails = Cookies.get('user_details');
+    return userDetails && Object.keys(JSON.parse(userDetails)).length !== 0;
   });
 
-  // Update localStorage whenever isAuthenticated changes
   useEffect(() => {
-    localStorage.setItem('isAuthenticated', isAuthenticated);
-  }, [isAuthenticated]);
+    const userDetails = Cookies.get('user_details');
+    setIsAuthenticated(userDetails && Object.keys(JSON.parse(userDetails)).length !== 0);
+  }, []);
 
   return (
     <AuthContext.Provider value={{ isAuthenticated, setIsAuthenticated }}>
