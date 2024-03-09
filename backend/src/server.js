@@ -15,7 +15,7 @@ module.exports.io = io;
 
 connectDB();
 var corsOptions = {
-  origin: 'http://localhost:5173',
+  origin: process.env.REACT_CLIENT_URI ,
   credentials: true
 }
 app.use(cors(corsOptions));

@@ -12,6 +12,10 @@ export const AuthProvider = ({ children }) => {
     const userDetails = Cookies.get('user_details');
     return userDetails && Object.keys(JSON.parse(userDetails)).length !== 0;
   });
+  const [userDetails] = useState(() => {
+    const userDetails = Cookies.get('user_details');
+    return userDetails && JSON.parse(userDetails);
+  });
 
   useEffect(() => {
     const userDetails = Cookies.get('user_details');
@@ -19,7 +23,7 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, setIsAuthenticated }}>
+    <AuthContext.Provider value={{ userDetails, isAuthenticated, setIsAuthenticated }}>
       {children}
     </AuthContext.Provider>
   );
