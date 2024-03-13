@@ -1,13 +1,14 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable no-unused-vars */
-import { useEffect, useState, lazy, Suspense } from 'react';
+import { lazy, Suspense } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import ProtectedRoute, { ErrorFallback } from './components/auth/ProtectedRoutes'
-import { useCookies } from 'react-cookie';
-import Cookies from 'js-cookie'
-import { AuthProvider, useAuth } from './hooks/AuthProvider';
+import { useAuth } from './hooks/AuthProvider';
 import { ErrorBoundary } from 'react-error-boundary'
 import CustomizedProgressBars from './components/shared/Loder';
+
+
+
 const Home = lazy(() => import('./pages/Home'))
 const Login = lazy(() => import('./pages/Login'))
 const Register = lazy(() => import('./pages/Register'))

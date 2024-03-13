@@ -25,6 +25,12 @@ app.use(express.static("public"))
 app.use(cookieParser());
 
 // Add your socket.io logic here
+io.on('connection', (socket) => {
+  console.log('a user connected');
+  socket.on('disconnect', () => {
+    console.log('user disconnected');
+  });
+});
 
 const userRouter = require('../routes/user.routes')
 
