@@ -1,0 +1,2 @@
+# Frontend Docker 
+FROM baseImage
