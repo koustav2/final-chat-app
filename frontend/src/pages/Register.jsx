@@ -1,7 +1,7 @@
 /* eslint-disable react/no-unescaped-entities */
 /* eslint-disable no-unused-vars */
 import React, { createRef, useState } from "react";
-import { Link, redirect } from "react-router-dom";
+import { Link, redirect, useNavigate } from "react-router-dom";
 import axios from 'axios';
 import { Container, Paper, Typography, FormControl, FormLabel, TextField, Button } from '@mui/material'
 import '../css/loder.css'
@@ -12,6 +12,7 @@ import { userNameValidator } from "../utils/validators";
 
 
 const Register = () => {
+  const navigate = useNavigate();
   const username = useInputValidation("", userNameValidator);
   const password = useInputValidation("");
   const email = useInputValidation("");
@@ -56,24 +57,32 @@ const Register = () => {
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       setLoading(true);
-      const response = axios.post(`${import.meta.env.VITE_SERVER_URL}/api/v1/register`, { username:username.value, email:email.value, password:password.value, "imageUrl": image },{
-        withCredentials:true,
-    });
-      console.log(response.data)
+      const response = await axios.post(`${import.meta.env.VITE_SERVER_URL}/api/v1/register`, {
+        username: username.value,
+        email: email.value,
+        password: password.value,
+        imageUrl: image
+      }, {
+        withCredentials: true,
+      });
+      console.log(response);
       if (response.status === 200) {
         setLoading(false);
-        redirect('/login');
+        navigate('/login');
+      } else {
+        toast.error(response.data.message);
+        setLoading(false);
       }
-    }
-    catch (error) {
-      toast.error(error);
+    } catch (error) {
+      toast.error(error.message);
       setLoading(false);
     }
   };
+
 
   return (
     <Container component={"main"}

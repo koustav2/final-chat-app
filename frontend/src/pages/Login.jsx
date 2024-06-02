@@ -21,32 +21,33 @@ const Login = () => {
   const [loading, setLoading] = useState(false);
   const [isPending, startTransition] = React.useTransition();
 
-  const handleLogin = async (e) => {
+  const handleLogin = (e) => {
     e.preventDefault();
-    try {
-      setLoading(true);
-      const response = await axios.post(`${import.meta.env.VITE_SERVER_URL}/api/v1/login`, {
-        username: username.value,
-        password: password.value,
-      }, {
-        withCredentials: true,
-      });
+    setLoading(true);
+  
+    axios.post(`${import.meta.env.VITE_SERVER_URL}/api/v1/login`, {
+      username: username.value,
+      password: password.value,
+    }, {
+      withCredentials: true,
+    })
+    .then(response => {
       if (response.data.statusCode == 200) {
         toast.success(response.data.message);
         setLoading(false);
         setIsAuthenticated(true);
-        navigate('/dashboard'); 
+        navigate('/dashboard');
       } else {
         setLoading(false);
-        console.log(response.response.data.message);
         toast.error(response.response.data.message);
       }
-    } catch (error) {
+    })
+    .catch(error => {
+      console.log(error);
       toast.error("An error occurred. Please try again");
       setLoading(false);
-    }
+    });
   };
-
 
   return (
     <Container component={"main"}
