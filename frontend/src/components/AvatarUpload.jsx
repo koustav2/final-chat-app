@@ -41,7 +41,7 @@ const AvatarUpload = ({
   
 }) => {
 
-  console.log(image);
+  // console.log(image);
   return (
     <CenteredContent>
       <BigAvatar

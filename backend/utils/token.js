@@ -21,7 +21,7 @@ module.exports.generateAccessAndRefreshtokens = async (userId) => {
         });
         return { accessToken, refreshToken };
     } catch (err) {
-        console.log(err); // log the error for debugging
+        // console.log(err); // log the error for debugging
         throw new ApiError(500, "Token generation failed");
     }
 };

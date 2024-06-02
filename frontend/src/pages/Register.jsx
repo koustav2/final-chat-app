@@ -43,7 +43,7 @@ const Register = () => {
           `https://api.cloudinary.com/v1_1/${import.meta.env.VITE_CLOUDINARY_CLOUD_NAME}/image/upload`,
           formData
         );
-        console.log(response.data);
+        // console.log(response.data);
         _setImage(response.data.secure_url);
       } catch (error) {
         toast.error(error);
@@ -69,7 +69,7 @@ const Register = () => {
       }, {
         withCredentials: true,
       });
-      console.log(response);
+      // console.log(response);
       if (response.status === 200) {
         setLoading(false);
         navigate('/login');

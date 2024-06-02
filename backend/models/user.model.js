@@ -56,7 +56,7 @@ userSchema.methods.comparePassword = async function (password) {
 }
 
 userSchema.methods.generateToken = function () {
-    console.log('Generating token for user', this._id); // Add logging
+    // console.log('Generating token for user', this._id); // Add logging
     try {
         const token = jwt.sign({
             _id: this._id,
@@ -69,7 +69,7 @@ userSchema.methods.generateToken = function () {
                 expiresIn: process.env.ACCESS_TOKEN_EXPIRY
             });
 
-        console.log('Generated access token: ', token); // Add logging
+        // console.log('Generated access token: ', token); // Add logging
         return token;
     } catch (error) {
         console.error('Failed to generate token: ', error); // Add error logging
@@ -78,7 +78,7 @@ userSchema.methods.generateToken = function () {
 }
 
 userSchema.methods.generateRefreshToken = function () {
-    console.log('Generating refresh token for user', this._id); // Add logging
+    // console.log('Generating refresh token for user', this._id); // Add logging
     try {
         const refreshToken = jwt.sign({
             _id: this._id,
@@ -89,7 +89,7 @@ userSchema.methods.generateRefreshToken = function () {
                 expiresIn: process.env.REFRESH_TOKEN_EXPIRY
             });
 
-        console.log('Generated refresh token: ', refreshToken); // Add logging
+        // console.log('Generated refresh token: ', refreshToken); // Add logging
         return refreshToken;
     } catch (error) {
         console.error('Failed to generate refresh token: ', error); // Add error logging
