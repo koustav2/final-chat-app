@@ -24,7 +24,7 @@ const ChatList = ({
                         index={i}
                         key={chat.chatId}
                         _id={chat.chatId}
-                        avatar={chat.avatar}
+                        
                         groupChat={chat.groupChat}
                         name={chat.name}
                         newMessageAlert={newMessageAlert}

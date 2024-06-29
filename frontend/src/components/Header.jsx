@@ -9,12 +9,18 @@ import { toast } from 'react-hot-toast'
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from '../hooks/AuthProvider'
 import NewGroup from './NewGroup';
+import Search from './header/Search';
+
+
+
+
 const Header = () => {
   const navigate = useNavigate();
   const { setIsAuthenticated } = useAuth();
   const [open, setOpen] = React.useState(false);
   const [mobile, setMobile] = React.useState(false);
   const [search, setSearch] = React.useState("");
+  const [isSearch, setIsSearch] = React.useState(false);
   const [isNewGroup, setIsNewGroup] = React.useState(false);
 
   const handleClickOpen = () => {
@@ -30,7 +36,7 @@ const Header = () => {
     setIsNewGroup(!isNewGroup);
   };
   const handleSearch = (e) => {
-    setSearch(prev => !prev)
+    setIsSearch(prev => !prev)
   };
 
   const navigateToGroup = (e) => {
@@ -92,7 +98,7 @@ const Header = () => {
             </Box>
             <Box sx={{ flexGrow: 1 }} />
             <Box>
-              <IconButton aria-label="" size="large" color="inherit" onClick={handleSearch}>
+              <IconButton aria-label="" size="large" color="inherit"  onClick={handleSearch}>
                 <SearchIcon />
               </IconButton>
 
@@ -121,6 +127,9 @@ const Header = () => {
       </Box>
       {
         open === true && <NewGroup open={open} setOpen={setOpen} handleClickOpen={handleClickOpen} handleClose={handleClose} />
+      }
+      {
+        isSearch === true && <Search/>
       }
     </>
   )

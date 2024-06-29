@@ -11,6 +11,7 @@ import { v4 as uuidv4 } from "uuid";
 import { useAuth } from '../../hooks/AuthProvider';
 import Cookies from 'js-cookie';
 import { useParams } from "react-router-dom"
+import Profile from '../Profile';
 
 const AppLayout = () => (WrapperComponent) => {
     const userDetails = Cookies.get('user_details');
@@ -86,7 +87,7 @@ const AppLayout = () => (WrapperComponent) => {
                         <WrapperComponent {...props} />
                     </Grid>
                     <Grid item md={4} lg={3} sx={{ display: { xs: 'none', md: 'block' }, padding: "2rem", bgcolor: "rgba(0,0,0,0.85)" }} height={"100%"}>
-                        Third
+                        <Profile/>
                     </Grid>
                 </Grid>
             </>

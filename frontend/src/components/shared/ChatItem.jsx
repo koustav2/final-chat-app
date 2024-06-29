@@ -4,9 +4,12 @@
 import React, { memo } from 'react'
 import { Link } from '../../css/StyledComponents'
 import { Stack, Typography, Box } from '@mui/material'
+import AvatarCard from './Avavtar'
 
 const ChatItem = ({
-    avatar,
+    avatar=[
+        "https://res.cloudinary.com/ds544u6mo/image/upload/v1709302890/te31uxupcui8l9jgpchb.jpg"
+    ],
     name = 'Koustav Maity',
     chatId,
     _id,
@@ -34,6 +37,7 @@ const ChatItem = ({
                 }}
             >
                 {/* Avatar Card */}
+                <AvatarCard avatar={avatar}/>
                 <Stack>
                     <Typography>{name}</Typography>
                     {

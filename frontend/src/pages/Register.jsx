@@ -8,14 +8,14 @@ import '../css/loder.css'
 import AvatarUpload from '../components/AvatarUpload';
 import { toast } from "react-hot-toast"
 import { useInputValidation } from '6pp'
-import { userNameValidator } from "../utils/validators";
+import { userNameValidator, emailValidator } from "../utils/validators";
 
 
 const Register = () => {
   const navigate = useNavigate();
   const username = useInputValidation("", userNameValidator);
   const password = useInputValidation("");
-  const email = useInputValidation("");
+  const email = useInputValidation("", emailValidator);
 
   const [loading, setLoading] = useState(false);
   const [image, _setImage] = useState('');
